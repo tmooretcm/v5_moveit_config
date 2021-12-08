@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: v5_asm
+    relative_path: urdf/ur5_joint_limited_robot.urdf
+    xacro_args: ""
+  SRDF:
+    relative_path: config/ur5.srdf
+  CONFIG:
+    author_name: Thomas Moore
+    author_email: tmooretcm@utexas.edu
+    generated_timestamp: 1638996477

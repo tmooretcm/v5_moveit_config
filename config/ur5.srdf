@@ -1,0 +1,445 @@
+<?xml version="1.0" ?>
+<!--This does not replace URDF, and is not an extension of URDF.
+    This is a format for representing semantic information about the robot structure.
+    A URDF file must exist for this robot as well, where the joints and the links that are referenced are defined
+-->
+<robot name="ur5">
+    <!--GROUPS: Representation of a set of joints and links. This can be useful for specifying DOF to plan for, defining arms, end effectors, etc-->
+    <!--LINKS: When a link is specified, the parent joint of that link (if it exists) is automatically included-->
+    <!--JOINTS: When a joint is specified, the child link of that joint (which will always exist) is automatically included-->
+    <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
+    <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
+    <group name="arm">
+        <joint name="stand_to_arm" />
+        <joint name="base_link-base_fixed_joint" />
+        <joint name="shoulder_pan_joint" />
+        <joint name="shoulder_lift_joint" />
+        <joint name="elbow_joint" />
+        <joint name="wrist_1_joint" />
+        <joint name="wrist_2_joint" />
+        <joint name="wrist_3_joint" />
+        <joint name="ee_fixed_joint" />
+        <joint name="wrist_3_link-tool0_fixed_joint" />
+    </group>
+    <group name="gripper">
+        <joint name="arm_to_gripper" />
+        <joint name="finger_joint" />
+        <joint name="left_outer_finger_joint" />
+        <joint name="left_inner_finger_joint" />
+        <joint name="left_inner_finger_pad_joint" />
+        <joint name="left_inner_knuckle_joint" />
+        <joint name="right_inner_knuckle_joint" />
+        <joint name="right_outer_knuckle_joint" />
+        <joint name="right_outer_finger_joint" />
+        <joint name="right_inner_finger_joint" />
+        <joint name="right_inner_finger_pad_joint" />
+    </group>
+    <group name="wheels">
+        <joint name="left_wheel" />
+        <joint name="right_wheel" />
+    </group>
+    <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
+    <group_state name="default_arm" group="arm">
+        <joint name="elbow_joint" value="0" />
+        <joint name="shoulder_lift_joint" value="0" />
+        <joint name="shoulder_pan_joint" value="0" />
+        <joint name="wrist_1_joint" value="0" />
+        <joint name="wrist_2_joint" value="0" />
+        <joint name="wrist_3_joint" value="0" />
+    </group_state>
+    <group_state name="default_gripper" group="gripper">
+        <joint name="finger_joint" value="0" />
+        <joint name="left_inner_finger_joint" value="0" />
+        <joint name="left_inner_knuckle_joint" value="0" />
+        <joint name="right_inner_finger_joint" value="0" />
+        <joint name="right_inner_knuckle_joint" value="0" />
+        <joint name="right_outer_knuckle_joint" value="0" />
+    </group_state>
+    <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
+    <end_effector name="2f_140" parent_link="wrist_3_link" group="gripper" parent_group="arm" />
+    <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
+    <virtual_joint name="right_virtual" type="planar" parent_frame="world" child_link="right_wheel_link" />
+    <virtual_joint name="left_virtual" type="planar" parent_frame="world" child_link="left_wheel_link" />
+    <virtual_joint name="front_virtual" type="planar" parent_frame="world" child_link="front_caster_wheel_link" />
+    <virtual_joint name="rear_virtual" type="planar" parent_frame="world" child_link="rear_caster_wheel_link" />
+    <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->
+    <passive_joint name="front_caster_wheel" />
+    <passive_joint name="rear_caster_wheel" />
+    <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
+    <disable_collisions link1="arm_stand" link2="aux_battery_link" reason="Never" />
+    <disable_collisions link1="arm_stand" link2="base_chassis_link" reason="Never" />
+    <disable_collisions link1="arm_stand" link2="base_link" reason="Adjacent" />
+    <disable_collisions link1="arm_stand" link2="base_link_main" reason="Adjacent" />
+    <disable_collisions link1="arm_stand" link2="front_caster_plate_link" reason="Never" />
+    <disable_collisions link1="arm_stand" link2="front_caster_swivel_link" reason="Never" />
+    <disable_collisions link1="arm_stand" link2="front_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="arm_stand" link2="hokuyo" reason="Never" />
+    <disable_collisions link1="arm_stand" link2="inertial_collision_link" reason="Default" />
+    <disable_collisions link1="arm_stand" link2="kinect" reason="Never" />
+    <disable_collisions link1="arm_stand" link2="left_spacer_link" reason="Never" />
+    <disable_collisions link1="arm_stand" link2="left_wheel_link" reason="Never" />
+    <disable_collisions link1="arm_stand" link2="lidar" reason="Never" />
+    <disable_collisions link1="arm_stand" link2="mcu_1_battery_link" reason="Never" />
+    <disable_collisions link1="arm_stand" link2="monitor" reason="Never" />
+    <disable_collisions link1="arm_stand" link2="rear_caster_plate_link" reason="Never" />
+    <disable_collisions link1="arm_stand" link2="rear_caster_swivel_link" reason="Never" />
+    <disable_collisions link1="arm_stand" link2="rear_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="arm_stand" link2="right_spacer_link" reason="Never" />
+    <disable_collisions link1="arm_stand" link2="right_wheel_link" reason="Never" />
+    <disable_collisions link1="arm_stand" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="arm_stand" link2="upper_chasis" reason="Never" />
+    <disable_collisions link1="aux_battery_link" link2="base_chassis_link" reason="Adjacent" />
+    <disable_collisions link1="aux_battery_link" link2="base_link" reason="Never" />
+    <disable_collisions link1="aux_battery_link" link2="base_link_main" reason="Never" />
+    <disable_collisions link1="aux_battery_link" link2="front_caster_plate_link" reason="Never" />
+    <disable_collisions link1="aux_battery_link" link2="front_caster_swivel_link" reason="Never" />
+    <disable_collisions link1="aux_battery_link" link2="front_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="aux_battery_link" link2="hokuyo" reason="Never" />
+    <disable_collisions link1="aux_battery_link" link2="inertial_collision_link" reason="Never" />
+    <disable_collisions link1="aux_battery_link" link2="kinect" reason="Never" />
+    <disable_collisions link1="aux_battery_link" link2="left_spacer_link" reason="Never" />
+    <disable_collisions link1="aux_battery_link" link2="left_wheel_link" reason="Never" />
+    <disable_collisions link1="aux_battery_link" link2="lidar" reason="Never" />
+    <disable_collisions link1="aux_battery_link" link2="mcu_1_battery_link" reason="Never" />
+    <disable_collisions link1="aux_battery_link" link2="monitor" reason="Never" />
+    <disable_collisions link1="aux_battery_link" link2="rear_caster_plate_link" reason="Never" />
+    <disable_collisions link1="aux_battery_link" link2="rear_caster_swivel_link" reason="Never" />
+    <disable_collisions link1="aux_battery_link" link2="rear_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="aux_battery_link" link2="right_spacer_link" reason="Never" />
+    <disable_collisions link1="aux_battery_link" link2="right_wheel_link" reason="Never" />
+    <disable_collisions link1="aux_battery_link" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="aux_battery_link" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="aux_battery_link" link2="upper_chasis" reason="Never" />
+    <disable_collisions link1="base_chassis_link" link2="base_link" reason="Never" />
+    <disable_collisions link1="base_chassis_link" link2="base_link_main" reason="Adjacent" />
+    <disable_collisions link1="base_chassis_link" link2="front_caster_plate_link" reason="Adjacent" />
+    <disable_collisions link1="base_chassis_link" link2="front_caster_swivel_link" reason="Never" />
+    <disable_collisions link1="base_chassis_link" link2="front_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="base_chassis_link" link2="hokuyo" reason="Never" />
+    <disable_collisions link1="base_chassis_link" link2="inertial_collision_link" reason="Adjacent" />
+    <disable_collisions link1="base_chassis_link" link2="kinect" reason="Never" />
+    <disable_collisions link1="base_chassis_link" link2="left_spacer_link" reason="Adjacent" />
+    <disable_collisions link1="base_chassis_link" link2="left_wheel_link" reason="Adjacent" />
+    <disable_collisions link1="base_chassis_link" link2="lidar" reason="Never" />
+    <disable_collisions link1="base_chassis_link" link2="mcu_1_battery_link" reason="Adjacent" />
+    <disable_collisions link1="base_chassis_link" link2="monitor" reason="Never" />
+    <disable_collisions link1="base_chassis_link" link2="rear_caster_plate_link" reason="Adjacent" />
+    <disable_collisions link1="base_chassis_link" link2="rear_caster_swivel_link" reason="Never" />
+    <disable_collisions link1="base_chassis_link" link2="rear_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="base_chassis_link" link2="right_spacer_link" reason="Adjacent" />
+    <disable_collisions link1="base_chassis_link" link2="right_wheel_link" reason="Adjacent" />
+    <disable_collisions link1="base_chassis_link" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="base_chassis_link" link2="upper_chasis" reason="Never" />
+    <disable_collisions link1="base_link" link2="base_link_main" reason="Default" />
+    <disable_collisions link1="base_link" link2="front_caster_plate_link" reason="Never" />
+    <disable_collisions link1="base_link" link2="front_caster_swivel_link" reason="Never" />
+    <disable_collisions link1="base_link" link2="front_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="base_link" link2="hokuyo" reason="Never" />
+    <disable_collisions link1="base_link" link2="inertial_collision_link" reason="Never" />
+    <disable_collisions link1="base_link" link2="kinect" reason="Never" />
+    <disable_collisions link1="base_link" link2="left_spacer_link" reason="Never" />
+    <disable_collisions link1="base_link" link2="left_wheel_link" reason="Never" />
+    <disable_collisions link1="base_link" link2="lidar" reason="Never" />
+    <disable_collisions link1="base_link" link2="mcu_1_battery_link" reason="Never" />
+    <disable_collisions link1="base_link" link2="monitor" reason="Never" />
+    <disable_collisions link1="base_link" link2="rear_caster_plate_link" reason="Never" />
+    <disable_collisions link1="base_link" link2="rear_caster_swivel_link" reason="Never" />
+    <disable_collisions link1="base_link" link2="rear_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="base_link" link2="right_spacer_link" reason="Never" />
+    <disable_collisions link1="base_link" link2="right_wheel_link" reason="Never" />
+    <disable_collisions link1="base_link" link2="shoulder_link" reason="Adjacent" />
+    <disable_collisions link1="base_link" link2="upper_chasis" reason="Never" />
+    <disable_collisions link1="base_link_main" link2="front_caster_plate_link" reason="Default" />
+    <disable_collisions link1="base_link_main" link2="front_caster_swivel_link" reason="Never" />
+    <disable_collisions link1="base_link_main" link2="front_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="base_link_main" link2="hokuyo" reason="Adjacent" />
+    <disable_collisions link1="base_link_main" link2="inertial_collision_link" reason="Default" />
+    <disable_collisions link1="base_link_main" link2="kinect" reason="Never" />
+    <disable_collisions link1="base_link_main" link2="left_spacer_link" reason="Default" />
+    <disable_collisions link1="base_link_main" link2="left_wheel_link" reason="Never" />
+    <disable_collisions link1="base_link_main" link2="lidar" reason="Never" />
+    <disable_collisions link1="base_link_main" link2="mcu_1_battery_link" reason="Never" />
+    <disable_collisions link1="base_link_main" link2="monitor" reason="Never" />
+    <disable_collisions link1="base_link_main" link2="rear_caster_plate_link" reason="Never" />
+    <disable_collisions link1="base_link_main" link2="rear_caster_swivel_link" reason="Never" />
+    <disable_collisions link1="base_link_main" link2="rear_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="base_link_main" link2="right_spacer_link" reason="Default" />
+    <disable_collisions link1="base_link_main" link2="right_wheel_link" reason="Never" />
+    <disable_collisions link1="base_link_main" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="base_link_main" link2="upper_chasis" reason="Adjacent" />
+    <disable_collisions link1="ee_link" link2="left_inner_finger" reason="Never" />
+    <disable_collisions link1="ee_link" link2="left_inner_finger_pad" reason="Never" />
+    <disable_collisions link1="ee_link" link2="left_inner_knuckle" reason="Never" />
+    <disable_collisions link1="ee_link" link2="left_outer_finger" reason="Never" />
+    <disable_collisions link1="ee_link" link2="left_outer_knuckle" reason="Never" />
+    <disable_collisions link1="ee_link" link2="lidar" reason="Never" />
+    <disable_collisions link1="ee_link" link2="right_inner_finger" reason="Never" />
+    <disable_collisions link1="ee_link" link2="right_inner_finger_pad" reason="Never" />
+    <disable_collisions link1="ee_link" link2="right_inner_knuckle" reason="Never" />
+    <disable_collisions link1="ee_link" link2="right_outer_finger" reason="Never" />
+    <disable_collisions link1="ee_link" link2="right_outer_knuckle" reason="Never" />
+    <disable_collisions link1="ee_link" link2="robotiq_arg2f_base_link" reason="Default" />
+    <disable_collisions link1="ee_link" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="ee_link" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="ee_link" link2="wrist_3_link" reason="Adjacent" />
+    <disable_collisions link1="forearm_link" link2="upper_arm_link" reason="Adjacent" />
+    <disable_collisions link1="forearm_link" link2="wrist_1_link" reason="Adjacent" />
+    <disable_collisions link1="front_caster_plate_link" link2="front_caster_swivel_link" reason="Adjacent" />
+    <disable_collisions link1="front_caster_plate_link" link2="front_caster_wheel_link" reason="Default" />
+    <disable_collisions link1="front_caster_plate_link" link2="hokuyo" reason="Never" />
+    <disable_collisions link1="front_caster_plate_link" link2="inertial_collision_link" reason="Never" />
+    <disable_collisions link1="front_caster_plate_link" link2="kinect" reason="Never" />
+    <disable_collisions link1="front_caster_plate_link" link2="left_spacer_link" reason="Never" />
+    <disable_collisions link1="front_caster_plate_link" link2="left_wheel_link" reason="Default" />
+    <disable_collisions link1="front_caster_plate_link" link2="lidar" reason="Never" />
+    <disable_collisions link1="front_caster_plate_link" link2="mcu_1_battery_link" reason="Never" />
+    <disable_collisions link1="front_caster_plate_link" link2="monitor" reason="Never" />
+    <disable_collisions link1="front_caster_plate_link" link2="rear_caster_plate_link" reason="Never" />
+    <disable_collisions link1="front_caster_plate_link" link2="rear_caster_swivel_link" reason="Never" />
+    <disable_collisions link1="front_caster_plate_link" link2="rear_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="front_caster_plate_link" link2="right_spacer_link" reason="Never" />
+    <disable_collisions link1="front_caster_plate_link" link2="right_wheel_link" reason="Default" />
+    <disable_collisions link1="front_caster_plate_link" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="front_caster_plate_link" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="front_caster_plate_link" link2="upper_chasis" reason="Never" />
+    <disable_collisions link1="front_caster_swivel_link" link2="front_caster_wheel_link" reason="Adjacent" />
+    <disable_collisions link1="front_caster_swivel_link" link2="hokuyo" reason="Never" />
+    <disable_collisions link1="front_caster_swivel_link" link2="inertial_collision_link" reason="Never" />
+    <disable_collisions link1="front_caster_swivel_link" link2="kinect" reason="Never" />
+    <disable_collisions link1="front_caster_swivel_link" link2="left_spacer_link" reason="Never" />
+    <disable_collisions link1="front_caster_swivel_link" link2="left_wheel_link" reason="Never" />
+    <disable_collisions link1="front_caster_swivel_link" link2="lidar" reason="Never" />
+    <disable_collisions link1="front_caster_swivel_link" link2="mcu_1_battery_link" reason="Never" />
+    <disable_collisions link1="front_caster_swivel_link" link2="monitor" reason="Never" />
+    <disable_collisions link1="front_caster_swivel_link" link2="rear_caster_plate_link" reason="Never" />
+    <disable_collisions link1="front_caster_swivel_link" link2="rear_caster_swivel_link" reason="Never" />
+    <disable_collisions link1="front_caster_swivel_link" link2="rear_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="front_caster_swivel_link" link2="right_spacer_link" reason="Never" />
+    <disable_collisions link1="front_caster_swivel_link" link2="right_wheel_link" reason="Never" />
+    <disable_collisions link1="front_caster_swivel_link" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="front_caster_swivel_link" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="front_caster_swivel_link" link2="upper_chasis" reason="Never" />
+    <disable_collisions link1="front_caster_wheel_link" link2="hokuyo" reason="Never" />
+    <disable_collisions link1="front_caster_wheel_link" link2="kinect" reason="Never" />
+    <disable_collisions link1="front_caster_wheel_link" link2="left_spacer_link" reason="Never" />
+    <disable_collisions link1="front_caster_wheel_link" link2="left_wheel_link" reason="Never" />
+    <disable_collisions link1="front_caster_wheel_link" link2="lidar" reason="Never" />
+    <disable_collisions link1="front_caster_wheel_link" link2="mcu_1_battery_link" reason="Never" />
+    <disable_collisions link1="front_caster_wheel_link" link2="monitor" reason="Never" />
+    <disable_collisions link1="front_caster_wheel_link" link2="rear_caster_plate_link" reason="Never" />
+    <disable_collisions link1="front_caster_wheel_link" link2="rear_caster_swivel_link" reason="Never" />
+    <disable_collisions link1="front_caster_wheel_link" link2="rear_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="front_caster_wheel_link" link2="right_spacer_link" reason="Never" />
+    <disable_collisions link1="front_caster_wheel_link" link2="right_wheel_link" reason="Never" />
+    <disable_collisions link1="front_caster_wheel_link" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="front_caster_wheel_link" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="front_caster_wheel_link" link2="upper_chasis" reason="Never" />
+    <disable_collisions link1="hokuyo" link2="inertial_collision_link" reason="Never" />
+    <disable_collisions link1="hokuyo" link2="kinect" reason="Never" />
+    <disable_collisions link1="hokuyo" link2="left_spacer_link" reason="Never" />
+    <disable_collisions link1="hokuyo" link2="left_wheel_link" reason="Never" />
+    <disable_collisions link1="hokuyo" link2="lidar" reason="Never" />
+    <disable_collisions link1="hokuyo" link2="mcu_1_battery_link" reason="Never" />
+    <disable_collisions link1="hokuyo" link2="monitor" reason="Never" />
+    <disable_collisions link1="hokuyo" link2="rear_caster_plate_link" reason="Never" />
+    <disable_collisions link1="hokuyo" link2="rear_caster_swivel_link" reason="Never" />
+    <disable_collisions link1="hokuyo" link2="rear_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="hokuyo" link2="right_spacer_link" reason="Never" />
+    <disable_collisions link1="hokuyo" link2="right_wheel_link" reason="Never" />
+    <disable_collisions link1="hokuyo" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="hokuyo" link2="upper_chasis" reason="Never" />
+    <disable_collisions link1="inertial_collision_link" link2="kinect" reason="Never" />
+    <disable_collisions link1="inertial_collision_link" link2="left_spacer_link" reason="Default" />
+    <disable_collisions link1="inertial_collision_link" link2="left_wheel_link" reason="Default" />
+    <disable_collisions link1="inertial_collision_link" link2="lidar" reason="Never" />
+    <disable_collisions link1="inertial_collision_link" link2="mcu_1_battery_link" reason="Never" />
+    <disable_collisions link1="inertial_collision_link" link2="monitor" reason="Never" />
+    <disable_collisions link1="inertial_collision_link" link2="rear_caster_plate_link" reason="Default" />
+    <disable_collisions link1="inertial_collision_link" link2="rear_caster_swivel_link" reason="Never" />
+    <disable_collisions link1="inertial_collision_link" link2="right_spacer_link" reason="Default" />
+    <disable_collisions link1="inertial_collision_link" link2="right_wheel_link" reason="Default" />
+    <disable_collisions link1="inertial_collision_link" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="inertial_collision_link" link2="upper_chasis" reason="Never" />
+    <disable_collisions link1="kinect" link2="left_inner_finger" reason="Never" />
+    <disable_collisions link1="kinect" link2="left_inner_finger_pad" reason="Never" />
+    <disable_collisions link1="kinect" link2="left_spacer_link" reason="Never" />
+    <disable_collisions link1="kinect" link2="left_wheel_link" reason="Never" />
+    <disable_collisions link1="kinect" link2="lidar" reason="Never" />
+    <disable_collisions link1="kinect" link2="mcu_1_battery_link" reason="Never" />
+    <disable_collisions link1="kinect" link2="monitor" reason="Never" />
+    <disable_collisions link1="kinect" link2="rear_caster_plate_link" reason="Never" />
+    <disable_collisions link1="kinect" link2="rear_caster_swivel_link" reason="Never" />
+    <disable_collisions link1="kinect" link2="rear_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="kinect" link2="right_inner_finger" reason="Never" />
+    <disable_collisions link1="kinect" link2="right_inner_finger_pad" reason="Never" />
+    <disable_collisions link1="kinect" link2="right_spacer_link" reason="Never" />
+    <disable_collisions link1="kinect" link2="right_wheel_link" reason="Never" />
+    <disable_collisions link1="kinect" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="kinect" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="kinect" link2="upper_chasis" reason="Adjacent" />
+    <disable_collisions link1="left_inner_finger" link2="left_inner_finger_pad" reason="Adjacent" />
+    <disable_collisions link1="left_inner_finger" link2="left_inner_knuckle" reason="Default" />
+    <disable_collisions link1="left_inner_finger" link2="left_outer_finger" reason="Adjacent" />
+    <disable_collisions link1="left_inner_finger" link2="left_outer_knuckle" reason="Never" />
+    <disable_collisions link1="left_inner_finger" link2="right_inner_finger" reason="Never" />
+    <disable_collisions link1="left_inner_finger" link2="right_inner_finger_pad" reason="Never" />
+    <disable_collisions link1="left_inner_finger" link2="right_inner_knuckle" reason="Never" />
+    <disable_collisions link1="left_inner_finger" link2="right_outer_finger" reason="Never" />
+    <disable_collisions link1="left_inner_finger" link2="right_outer_knuckle" reason="Never" />
+    <disable_collisions link1="left_inner_finger" link2="robotiq_arg2f_base_link" reason="Never" />
+    <disable_collisions link1="left_inner_finger" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="left_inner_finger" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="left_inner_finger" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="left_inner_finger_pad" link2="left_inner_knuckle" reason="Never" />
+    <disable_collisions link1="left_inner_finger_pad" link2="left_outer_finger" reason="Never" />
+    <disable_collisions link1="left_inner_finger_pad" link2="left_outer_knuckle" reason="Never" />
+    <disable_collisions link1="left_inner_finger_pad" link2="right_inner_finger" reason="Never" />
+    <disable_collisions link1="left_inner_finger_pad" link2="right_inner_knuckle" reason="Never" />
+    <disable_collisions link1="left_inner_finger_pad" link2="right_outer_finger" reason="Never" />
+    <disable_collisions link1="left_inner_finger_pad" link2="right_outer_knuckle" reason="Never" />
+    <disable_collisions link1="left_inner_finger_pad" link2="robotiq_arg2f_base_link" reason="Never" />
+    <disable_collisions link1="left_inner_finger_pad" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="left_inner_finger_pad" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="left_inner_finger_pad" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="left_inner_knuckle" link2="left_outer_finger" reason="Never" />
+    <disable_collisions link1="left_inner_knuckle" link2="left_outer_knuckle" reason="Default" />
+    <disable_collisions link1="left_inner_knuckle" link2="right_inner_finger" reason="Never" />
+    <disable_collisions link1="left_inner_knuckle" link2="right_inner_finger_pad" reason="Never" />
+    <disable_collisions link1="left_inner_knuckle" link2="right_inner_knuckle" reason="Never" />
+    <disable_collisions link1="left_inner_knuckle" link2="right_outer_finger" reason="Never" />
+    <disable_collisions link1="left_inner_knuckle" link2="right_outer_knuckle" reason="Never" />
+    <disable_collisions link1="left_inner_knuckle" link2="robotiq_arg2f_base_link" reason="Adjacent" />
+    <disable_collisions link1="left_inner_knuckle" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="left_inner_knuckle" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="left_inner_knuckle" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="left_outer_finger" link2="left_outer_knuckle" reason="Adjacent" />
+    <disable_collisions link1="left_outer_finger" link2="right_inner_finger" reason="Never" />
+    <disable_collisions link1="left_outer_finger" link2="right_inner_finger_pad" reason="Never" />
+    <disable_collisions link1="left_outer_finger" link2="right_inner_knuckle" reason="Never" />
+    <disable_collisions link1="left_outer_finger" link2="right_outer_finger" reason="Never" />
+    <disable_collisions link1="left_outer_finger" link2="right_outer_knuckle" reason="Never" />
+    <disable_collisions link1="left_outer_finger" link2="robotiq_arg2f_base_link" reason="Never" />
+    <disable_collisions link1="left_outer_finger" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="left_outer_finger" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="left_outer_finger" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="left_outer_knuckle" link2="right_inner_finger" reason="Never" />
+    <disable_collisions link1="left_outer_knuckle" link2="right_inner_finger_pad" reason="Never" />
+    <disable_collisions link1="left_outer_knuckle" link2="right_inner_knuckle" reason="Never" />
+    <disable_collisions link1="left_outer_knuckle" link2="right_outer_finger" reason="Never" />
+    <disable_collisions link1="left_outer_knuckle" link2="right_outer_knuckle" reason="Never" />
+    <disable_collisions link1="left_outer_knuckle" link2="robotiq_arg2f_base_link" reason="Adjacent" />
+    <disable_collisions link1="left_outer_knuckle" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="left_outer_knuckle" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="left_outer_knuckle" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="left_spacer_link" link2="left_wheel_link" reason="Default" />
+    <disable_collisions link1="left_spacer_link" link2="lidar" reason="Never" />
+    <disable_collisions link1="left_spacer_link" link2="mcu_1_battery_link" reason="Never" />
+    <disable_collisions link1="left_spacer_link" link2="monitor" reason="Never" />
+    <disable_collisions link1="left_spacer_link" link2="rear_caster_plate_link" reason="Never" />
+    <disable_collisions link1="left_spacer_link" link2="rear_caster_swivel_link" reason="Never" />
+    <disable_collisions link1="left_spacer_link" link2="rear_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="left_spacer_link" link2="right_spacer_link" reason="Never" />
+    <disable_collisions link1="left_spacer_link" link2="right_wheel_link" reason="Never" />
+    <disable_collisions link1="left_spacer_link" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="left_spacer_link" link2="upper_chasis" reason="Never" />
+    <disable_collisions link1="left_wheel_link" link2="lidar" reason="Never" />
+    <disable_collisions link1="left_wheel_link" link2="mcu_1_battery_link" reason="Never" />
+    <disable_collisions link1="left_wheel_link" link2="monitor" reason="Never" />
+    <disable_collisions link1="left_wheel_link" link2="rear_caster_plate_link" reason="Default" />
+    <disable_collisions link1="left_wheel_link" link2="rear_caster_swivel_link" reason="Never" />
+    <disable_collisions link1="left_wheel_link" link2="rear_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="left_wheel_link" link2="right_spacer_link" reason="Never" />
+    <disable_collisions link1="left_wheel_link" link2="right_wheel_link" reason="Never" />
+    <disable_collisions link1="left_wheel_link" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="left_wheel_link" link2="upper_chasis" reason="Never" />
+    <disable_collisions link1="lidar" link2="mcu_1_battery_link" reason="Never" />
+    <disable_collisions link1="lidar" link2="monitor" reason="Never" />
+    <disable_collisions link1="lidar" link2="rear_caster_plate_link" reason="Never" />
+    <disable_collisions link1="lidar" link2="rear_caster_swivel_link" reason="Never" />
+    <disable_collisions link1="lidar" link2="rear_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="lidar" link2="right_inner_finger_pad" reason="Never" />
+    <disable_collisions link1="lidar" link2="right_spacer_link" reason="Never" />
+    <disable_collisions link1="lidar" link2="right_wheel_link" reason="Never" />
+    <disable_collisions link1="lidar" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="lidar" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="lidar" link2="upper_chasis" reason="Adjacent" />
+    <disable_collisions link1="mcu_1_battery_link" link2="monitor" reason="Never" />
+    <disable_collisions link1="mcu_1_battery_link" link2="rear_caster_plate_link" reason="Never" />
+    <disable_collisions link1="mcu_1_battery_link" link2="rear_caster_swivel_link" reason="Never" />
+    <disable_collisions link1="mcu_1_battery_link" link2="rear_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="mcu_1_battery_link" link2="right_spacer_link" reason="Never" />
+    <disable_collisions link1="mcu_1_battery_link" link2="right_wheel_link" reason="Never" />
+    <disable_collisions link1="mcu_1_battery_link" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="mcu_1_battery_link" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="mcu_1_battery_link" link2="upper_chasis" reason="Never" />
+    <disable_collisions link1="monitor" link2="rear_caster_plate_link" reason="Never" />
+    <disable_collisions link1="monitor" link2="rear_caster_swivel_link" reason="Never" />
+    <disable_collisions link1="monitor" link2="rear_caster_wheel_link" reason="Never" />
+    <disable_collisions link1="monitor" link2="right_spacer_link" reason="Never" />
+    <disable_collisions link1="monitor" link2="right_wheel_link" reason="Never" />
+    <disable_collisions link1="monitor" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="monitor" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="monitor" link2="upper_chasis" reason="Adjacent" />
+    <disable_collisions link1="rear_caster_plate_link" link2="rear_caster_swivel_link" reason="Adjacent" />
+    <disable_collisions link1="rear_caster_plate_link" link2="rear_caster_wheel_link" reason="Default" />
+    <disable_collisions link1="rear_caster_plate_link" link2="right_spacer_link" reason="Never" />
+    <disable_collisions link1="rear_caster_plate_link" link2="right_wheel_link" reason="Default" />
+    <disable_collisions link1="rear_caster_plate_link" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="rear_caster_plate_link" link2="upper_chasis" reason="Never" />
+    <disable_collisions link1="rear_caster_swivel_link" link2="rear_caster_wheel_link" reason="Adjacent" />
+    <disable_collisions link1="rear_caster_swivel_link" link2="right_spacer_link" reason="Never" />
+    <disable_collisions link1="rear_caster_swivel_link" link2="right_wheel_link" reason="Never" />
+    <disable_collisions link1="rear_caster_swivel_link" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="rear_caster_swivel_link" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="rear_caster_swivel_link" link2="upper_chasis" reason="Never" />
+    <disable_collisions link1="rear_caster_wheel_link" link2="right_spacer_link" reason="Never" />
+    <disable_collisions link1="rear_caster_wheel_link" link2="right_wheel_link" reason="Never" />
+    <disable_collisions link1="rear_caster_wheel_link" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="rear_caster_wheel_link" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="rear_caster_wheel_link" link2="upper_chasis" reason="Never" />
+    <disable_collisions link1="right_inner_finger" link2="right_inner_finger_pad" reason="Adjacent" />
+    <disable_collisions link1="right_inner_finger" link2="right_inner_knuckle" reason="Default" />
+    <disable_collisions link1="right_inner_finger" link2="right_outer_finger" reason="Adjacent" />
+    <disable_collisions link1="right_inner_finger" link2="right_outer_knuckle" reason="Never" />
+    <disable_collisions link1="right_inner_finger" link2="robotiq_arg2f_base_link" reason="Never" />
+    <disable_collisions link1="right_inner_finger" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="right_inner_finger" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="right_inner_finger" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="right_inner_finger_pad" link2="right_inner_knuckle" reason="Never" />
+    <disable_collisions link1="right_inner_finger_pad" link2="right_outer_finger" reason="Never" />
+    <disable_collisions link1="right_inner_finger_pad" link2="right_outer_knuckle" reason="Never" />
+    <disable_collisions link1="right_inner_finger_pad" link2="robotiq_arg2f_base_link" reason="Never" />
+    <disable_collisions link1="right_inner_finger_pad" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="right_inner_finger_pad" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="right_inner_finger_pad" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="right_inner_knuckle" link2="right_outer_finger" reason="Never" />
+    <disable_collisions link1="right_inner_knuckle" link2="right_outer_knuckle" reason="Default" />
+    <disable_collisions link1="right_inner_knuckle" link2="robotiq_arg2f_base_link" reason="Adjacent" />
+    <disable_collisions link1="right_inner_knuckle" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="right_inner_knuckle" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="right_inner_knuckle" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="right_outer_finger" link2="right_outer_knuckle" reason="Adjacent" />
+    <disable_collisions link1="right_outer_finger" link2="robotiq_arg2f_base_link" reason="Never" />
+    <disable_collisions link1="right_outer_finger" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="right_outer_finger" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="right_outer_finger" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="right_outer_knuckle" link2="robotiq_arg2f_base_link" reason="Adjacent" />
+    <disable_collisions link1="right_outer_knuckle" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="right_outer_knuckle" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="right_outer_knuckle" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="right_spacer_link" link2="right_wheel_link" reason="Default" />
+    <disable_collisions link1="right_spacer_link" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="right_spacer_link" link2="upper_arm_link" reason="Never" />
+    <disable_collisions link1="right_spacer_link" link2="upper_chasis" reason="Never" />
+    <disable_collisions link1="right_wheel_link" link2="shoulder_link" reason="Never" />
+    <disable_collisions link1="right_wheel_link" link2="upper_chasis" reason="Never" />
+    <disable_collisions link1="robotiq_arg2f_base_link" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="robotiq_arg2f_base_link" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="robotiq_arg2f_base_link" link2="wrist_3_link" reason="Adjacent" />
+    <disable_collisions link1="shoulder_link" link2="upper_arm_link" reason="Adjacent" />
+    <disable_collisions link1="shoulder_link" link2="upper_chasis" reason="Never" />
+    <disable_collisions link1="upper_arm_link" link2="upper_chasis" reason="Never" />
+    <disable_collisions link1="wrist_1_link" link2="wrist_2_link" reason="Adjacent" />
+    <disable_collisions link1="wrist_1_link" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="wrist_2_link" link2="wrist_3_link" reason="Adjacent" />
+</robot>
